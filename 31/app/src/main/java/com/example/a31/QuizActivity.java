@@ -9,12 +9,13 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.Locale;
 
 public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Member variables
     private String userName;
     private Question[] questions = {
+            // Array of Question objects representing the quiz questions
             new Question("What is the capital of France?", new String[]{"Paris", "London", "Berlin", "Victoria"}, 0),
             new Question("Which planet is known as the Red Planet?", new String[]{"Mars", "Jupiter", "Venus", "Moon"}, 1),
             new Question("Who wrote 'Romeo and Juliet'?", new String[]{"William Shakespeare", "Jane Austen", "Charles Dickens", "Michael Jackson"}, 0),
@@ -40,12 +41,13 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quiz_activity);
+
+        // Get user instance from singleton class
         User user = User.getInstance();
 
+        // Initialize UI elements
         userGreeting = findViewById(R.id.userGreeting);
         userGreeting.setText("Hello " + user.getName());
-
-
         progressBar = findViewById(R.id.progressBar);
         progressText = findViewById(R.id.progressText);
         questionTitle = findViewById(R.id.questionTitle);
@@ -56,6 +58,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         submitAnswer = findViewById(R.id.submitAnswer);
         currentScore = findViewById(R.id.currentScore);
 
+        // Set click listeners for UI elements
         updateQuestion();
         submitAnswer.setOnClickListener(this);
         answer1.setOnClickListener(this);
@@ -64,6 +67,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         answer4.setOnClickListener(this);
     }
 
+    // Handle click events for UI elements
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.submitAnswer) {
@@ -82,6 +86,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Update UI elements to reflect the state of the quiz
     private void updateView() {
         progressBar.setProgress((currentQuestionIndex + 1) * 20);
         currentScore.setText("Score: " + String.valueOf(score) + "/5");
@@ -95,6 +100,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         answer4.setEnabled(false);
     }
 
+    // Handle click events for selecting answers
     private void onAnswerClick(View view) {
         if (finalAnswer != -1) {
             RadioButton prevFinal = getAnswer(finalAnswer);
@@ -105,6 +111,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         currentFinal.setBackgroundResource(R.drawable.selected_background);
     }
 
+    // Get the index of the selected answer
     private int getAnswerIndex(int id) {
         if (id == R.id.answer1) {
             return 0;
@@ -117,6 +124,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Get the RadioButton corresponding to the given index
     private RadioButton getAnswer(int index) {
         switch (index) {
             case 0:
@@ -125,11 +133,14 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
                 return answer2;
             case 2:
                 return answer3;
+            case 3:
+                return answer4;
             default:
                 return null;
         }
     }
 
+    // Update the current question being displayed
     private void updateQuestion() {
         if (currentQuestionIndex < questions.length) {
             finalAnswer = -1;
@@ -137,7 +148,6 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
 
             progressText.setText("Question " + String.valueOf(currentQuestionIndex + 1) + "/5");
             questionTitle.setText(question.getQuestion());
-
 
             String[] answers = question.getAnswers();
             answer1.setText(answers[0]);
@@ -159,6 +169,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Check the selected answer and update score
     private void checkAnswer() {
         String result = "Incorrect.";
         RadioButton correct = getAnswer(questions[currentQuestionIndex].getCorrectAnswerIndex());
@@ -174,6 +185,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         updateView();
     }
 
+    // Show the final score activity
     private void showFinalScore() {
         Intent intent = new Intent(QuizActivity.this, FinalScore.class);
         intent.putExtra("score", score);
