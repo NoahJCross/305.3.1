@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">3.1 calculator</string>
+    <string-array name="type_array">
+        <item>Addition</item>
+        <item>Subtraction</item>
+    </string-array>
+</resources>
